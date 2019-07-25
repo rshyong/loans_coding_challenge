@@ -1,0 +1,17 @@
+{
+  "name": "affirm_coding",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "big.js": "^5.2.2",
+    "csv-parser": "^2.3.0",
+    "csv-writer": "^1.5.0"
+  }
+}
