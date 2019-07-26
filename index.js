@@ -88,7 +88,7 @@ function calculateYield(obj) {
  */
 function assignAndCalcYield(obj) {
     let { loans, facilities, facilitiesMap } = obj;
-    let assignment = [];
+    let assignments = [];
     let yields = {};
     for (let i = 0; i < loans.length; i++) {
         let loan = loans[i];
@@ -97,7 +97,7 @@ function assignAndCalcYield(obj) {
             if (Big(loan.amount).lte(Big(facility.amount)) && !facility.banned_states.includes(loan.state)) {
                 if (!facility.max_default_likelihood || Big(loan.default_likelihood).lte(Big(facility.max_default_likelihood))) {
                     facility.amount = Big(facility.amount).minus(Big(loan.amount)).toFixed();
-                    assignment.push({
+                    assignments.push({
                         loan_id: loan.id,
                         facility_id: facilities[j].id
                     });
@@ -108,7 +108,7 @@ function assignAndCalcYield(obj) {
         }
     }
     return {
-        assignment, 
+        assignments, 
         yields
     };
 }
@@ -136,7 +136,8 @@ async function sortLoans() {
     });
     // add covenants and other info to each facility
     let facilitiesMap = createFacilitiesMap({facilities, covenants, banks});
-    let { assignment, yields } = assignAndCalcYield({loans, facilities, facilitiesMap});
+    // assign loans to facilities and calculate yield for each facility
+    let { assignments, yields } = assignAndCalcYield({loans, facilities, facilitiesMap});
     // turn yields obj to array
     let yieldsArr = Object.keys(yields).map(facility_id => {
         return {
@@ -145,10 +146,9 @@ async function sortLoans() {
         };
     });
     // write assignments and yields to csv
-    let writeAssignments, writeYields;
     try {
-        writeAssignments = writeCSV({ name: 'assignments', records: assignment });
-        writeYields = writeCSV({ name: 'yields', records: yieldsArr });
+        let writeAssignments = writeCSV({ name: 'assignments', records: assignments });
+        let writeYields = writeCSV({ name: 'yields', records: yieldsArr });
         await Promise.all([writeAssignments, writeYields ]);
         console.log('Done! Check output file');
     } catch(err) {
