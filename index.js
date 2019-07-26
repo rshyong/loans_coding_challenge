@@ -139,7 +139,7 @@ async function sortLoans() {
     [loans, banks, facilities, covenants ] = files;
     // sort facilities from lowest to highest based on interest rate
     facilities.sort((a, b) => {
-        return a.interest_rate > b.interest_rate;
+        return Big(a.interest_rate).gte(Big(b.interest_rate));
     });
     // add covenants and other info to each facility
     let facilitiesMap = createFacilitiesMap({facilities, covenants, banks});
