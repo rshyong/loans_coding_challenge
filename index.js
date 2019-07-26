@@ -162,4 +162,13 @@ async function sortLoans() {
     }
 }
 
-sortLoans();
+if (process.env.NODE_ENV !== 'test') {
+    // run if not part of mocha chai test
+    sortLoans();
+}
+
+module.exports = {
+    createFacilitiesMap,
+    calculateYield,
+    assignAndCalcYield
+};
