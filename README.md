@@ -4,7 +4,7 @@
 
 This app sorts a stream of loans into different facilities based on interest rates and other criteria.
 
-## Usage
+## Running the App
 
 To run the app, first type ```npm i``` in your terminal.
 
