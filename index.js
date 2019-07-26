@@ -3,6 +3,7 @@
 const readCSV = require('./lib/readCSV.js');
 const writeCSV = require('./lib/writeCSV.js');
 const Big = require('big.js');
+const path = require('path');
 
 /**
  * Create a facilities map with bank name and associated covenants
@@ -134,10 +135,10 @@ async function sortLoans() {
     let files, loans, banks, facilities, covenants;
     let folder = process.env.FOLDER;
     try {
-        let loansCSV = readCSV(`input/${folder}/loans.csv`);
-        let banksCSV = readCSV(`input/${folder}/banks.csv`);
-        let facCSV = readCSV(`input/${folder}/facilities.csv`);
-        let covCSV = readCSV(`input/${folder}/covenants.csv`);
+        let loansCSV = readCSV(path.join(__dirname, `input/${folder}/loans.csv`));
+        let banksCSV = readCSV(path.join(__dirname, `input/${folder}/banks.csv`));
+        let facCSV = readCSV(path.join(__dirname, `input/${folder}/facilities.csv`));
+        let covCSV = readCSV(path.join(__dirname, `input/${folder}/covenants.csv`));
         files = await Promise.all([loansCSV, banksCSV, facCSV, covCSV]);
     } catch (err) {
         return console.error('Error reading file(s)', err);
