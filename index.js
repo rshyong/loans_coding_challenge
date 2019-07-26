@@ -72,11 +72,7 @@ function calculateYield(obj) {
     if (loanYield.lte(0)) {
         console.log('Loan yield should not be negative/ 0', { loan, id, facility });
     }
-    if (yields[id]) {
-        yields[id] = Big(yields[id]).plus(loanYield).toFixed(0);
-    } else {
-        yields[id] = loanYield.toFixed(0);
-    }
+    yields[id] = Big(yields[id]).plus(loanYield).toFixed(0);
 }
 
 /**
@@ -89,7 +85,10 @@ function calculateYield(obj) {
 function assignAndCalcYield(obj) {
     let { loans, facilities, facilitiesMap } = obj;
     let assignments = [];
-    let yields = {};
+    let yields = facilities.reduce((acc, curr) => {
+        acc[curr.id] = 0;
+        return acc;
+    }, {});
     for (let i = 0; i < loans.length; i++) {
         let loan = loans[i];
         for (let j = 0; j < facilities.length; j++) {
@@ -105,6 +104,13 @@ function assignAndCalcYield(obj) {
                     break;
                 }
             }
+        }
+        // if loan was unassigned add null to assignments array
+        if (assignments[assignments.length - 1].loan_id !== loan.id) {
+            assignments.push({
+                loan_id: loan.id,
+                facility_id: 'null'
+            });
         }
     };
     // turn yields obj to array
