@@ -30,7 +30,7 @@ function createFacilitiesMap(obj) {
             amount: facility.amount,
             interest_rate: facility.interest_rate,
             bank_name: banksMap[facility.bank_id].name,
-            banned_states: []
+            banned_states: {}
         };
         banksMap[facility.bank_id].facilities.push(facility.id);
     }
@@ -40,14 +40,14 @@ function createFacilitiesMap(obj) {
         if (facility_id) {
             // add covenant to facility
             if (max_default_likelihood) facilitiesMap[facility_id].max_default_likelihood = max_default_likelihood;
-            if (banned_state) facilitiesMap[facility_id].banned_states.push(banned_state);
+            if (banned_state) facilitiesMap[facility_id].banned_states[banned_state] = true;
         } else {
             // add covenant to all facilities associated with bank_id
             let bankFacilities = banksMap[bank_id].facilities;
             for (let j = 0 ; j < bankFacilities.length; j++) {
                 let bankFacilityId = bankFacilities[j];
                 if (max_default_likelihood) facilitiesMap[bankFacilityId].max_default_likelihood = max_default_likelihood;
-                if (banned_state) facilitiesMap[bankFacilityId].banned_states.push(banned_state);
+                if (banned_state) facilitiesMap[bankFacilityId].banned_states[banned_state] = true;
             }
         }
     }
@@ -70,7 +70,7 @@ function calculateYield(obj) {
     let loanYield = expInterest.minus(expLoss).minus(facCost);
     // Debugging line to make sure none of the yields are negative
     if (loanYield.lte(0)) {
-        console.log('Should not be negative/ 0', { loan, id, facility });
+        console.log('Loan yield should not be negative/ 0', { loan, id, facility });
     }
     if (yields[id]) {
         yields[id] = Big(yields[id]).plus(loanYield).toFixed(0);
@@ -94,7 +94,7 @@ function assignAndCalcYield(obj) {
         let loan = loans[i];
         for (let j = 0; j < facilities.length; j++) {
             let facility = facilitiesMap[facilities[j].id];
-            if (Big(loan.amount).lte(Big(facility.amount)) && !facility.banned_states.includes(loan.state)) {
+            if (Big(loan.amount).lte(Big(facility.amount)) && !facility.banned_states[loan.state]) {
                 if (!facility.max_default_likelihood || Big(loan.default_likelihood).lte(Big(facility.max_default_likelihood))) {
                     facility.amount = Big(facility.amount).minus(Big(loan.amount)).toFixed();
                     assignments.push({
