@@ -53,4 +53,22 @@ describe('Loan sorting tests', function () {
     });
   });
 
+  describe('assignAndCalcYield', function () {
+    it('returns a map of assignments and yields', function () {
+      let facilitiesMap = createFacilitiesMap({ facilities, covenants, banks }); 
+      let { assignments, yields } = assignAndCalcYield({ loans, facilities, facilitiesMap });
+      const expAssignments = [
+        { loan_id: '1', facility_id: '1' },
+        { loan_id: '2', facility_id: '2' },
+        { loan_id: '3', facility_id: '1' }
+      ];
+      const expYields = [
+        { facility_id: '1', expected_yield: '16375' },
+        { facility_id: '2', expected_yield: '3504' }
+      ];
+      expect(assignments).to.deep.equal(expAssignments);
+      expect(yields).to.deep.equal(expYields);
+    });
+  });
+
 });
