@@ -71,4 +71,23 @@ describe('Loan sorting tests', function () {
     });
   });
 
+  describe('calculateYield', function () {
+    it('returns a map of yields', function () {
+      let facilitiesMap = createFacilitiesMap({ facilities, covenants, banks }); 
+      let yields = {'1': 0 };
+      let loan = {
+        interest_rate: '0.35',
+        amount: '74965',
+        id: '3',
+        default_likelihood: '0.06',
+        state: 'AL'
+      };
+      let expYields = {
+        '1': (((1 - 0.06) * 0.35 * 74965) - (0.06 * 74965) - (0.06 * 74965)).toFixed(0)
+      };
+      calculateYield({ loan, id: '1', facility: facilitiesMap['1'], yields });
+      expect(yields).to.deep.equal(expYields);
+    });
+  });
+
 });
