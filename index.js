@@ -126,12 +126,12 @@ function assignAndCalcYield(obj) {
 async function sortLoans() {
     // Read CSV files
     let files, loans, banks, facilities, covenants;
-    let str = process.env.FOLDER;
+    let folder = process.env.FOLDER;
     try {
-        let loansCSV = readCSV(`input/${str}/loans.csv`);
-        let banksCSV = readCSV(`input/${str}/banks.csv`);
-        let facCSV = readCSV(`input/${str}/facilities.csv`);
-        let covCSV = readCSV(`input/${str}/covenants.csv`);
+        let loansCSV = readCSV(`input/${folder}/loans.csv`);
+        let banksCSV = readCSV(`input/${folder}/banks.csv`);
+        let facCSV = readCSV(`input/${folder}/facilities.csv`);
+        let covCSV = readCSV(`input/${folder}/covenants.csv`);
         files = await Promise.all([loansCSV, banksCSV, facCSV, covCSV]);
     } catch (err) {
         return console.error('Error reading file(s)', err);
