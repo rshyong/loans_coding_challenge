@@ -106,10 +106,17 @@ function assignAndCalcYield(obj) {
                 }
             }
         }
-    }
+    };
+    // turn yields obj to array
+    let yieldsArr = Object.keys(yields).map(facility_id => {
+        return {
+            facility_id,
+            expected_yield: yields[facility_id]
+        };
+    });
     return {
         assignments, 
-        yields
+        yields: yieldsArr
     };
 }
 
@@ -138,17 +145,10 @@ async function sortLoans() {
     let facilitiesMap = createFacilitiesMap({facilities, covenants, banks});
     // assign loans to facilities and calculate yield for each facility
     let { assignments, yields } = assignAndCalcYield({loans, facilities, facilitiesMap});
-    // turn yields obj to array
-    let yieldsArr = Object.keys(yields).map(facility_id => {
-        return {
-            facility_id,
-            expected_yield: yields[facility_id]
-        };
-    });
     // write assignments and yields to csv
     try {
         let writeAssignments = writeCSV({ name: 'assignments', records: assignments });
-        let writeYields = writeCSV({ name: 'yields', records: yieldsArr });
+        let writeYields = writeCSV({ name: 'yields', records: yields });
         await Promise.all([writeAssignments, writeYields ]);
         console.log('Done! Check output file');
     } catch(err) {
