@@ -150,11 +150,11 @@ async function sortLoans(str) {
         writeAssignments = writeCSV({ name: 'assignments', records: assignment });
         writeYields = writeCSV({ name: 'yields', records: yieldsArr });
         await Promise.all([writeAssignments, writeYields ]);
+        console.log('Done! Check output file');
     } catch(err) {
         console.error('Error writing file(s)', err);
     }
-    console.log('Done! Check output file');
 }
 
-// sortLoans('small');
-sortLoans('large');
+sortLoans('small');
+// sortLoans('large');
