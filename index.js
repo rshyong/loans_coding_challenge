@@ -115,11 +115,11 @@ function assignAndCalcYield(obj) {
 
 /**
  * Main function. Sorts loans into facilities and calculates yields
- * @param {String} str Folder name
  */
-async function sortLoans(str) {
+async function sortLoans() {
     // Read CSV files
     let files, loans, banks, facilities, covenants;
+    let str = process.env.FOLDER;
     try {
         let loansCSV = readCSV(`input/${str}/loans.csv`);
         let banksCSV = readCSV(`input/${str}/banks.csv`);
@@ -156,5 +156,4 @@ async function sortLoans(str) {
     }
 }
 
-sortLoans('small');
-// sortLoans('large');
+sortLoans();
